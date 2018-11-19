@@ -1,12 +1,15 @@
-import React from 'react';
-import { getImageUrl } from '../../config';
+import React from "react";
+import { connect } from "react-redux";
+import { getImageUrl } from "../../config";
+import { addHeart } from "../actions";
+import { removeHeart } from "../actions";
 
-export default class Card extends React.Component {
+class Card extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      opened: false,
+      opened: false
     };
   }
 
@@ -14,23 +17,32 @@ export default class Card extends React.Component {
     const { opened } = this.state;
 
     this.setState({
-      opened: !opened,
+      opened: !opened
     });
+  };
+
+  isHearted = () => {
+    const {
+      hearted,
+      movie: { id }
+    } = this.props;
+
+    return hearted.includes(id);
   };
 
   render() {
     const {
-      isHearted,
       onAddHeart,
       onRemoveHeart,
       movie: {
+        id,
         backdrop_path,
         original_title,
         overview,
         release_date,
         vote_average,
-        vote_count,
-      },
+        vote_count
+      }
     } = this.props;
     const { opened } = this.state;
 
@@ -41,17 +53,22 @@ export default class Card extends React.Component {
           style={{ backgroundImage: `url(${getImageUrl(backdrop_path)})` }}
         />
 
-        <div className="card__title">
-          {original_title}
-        </div>
+        <div className="card__title">{original_title}</div>
 
-        <div className="card__like" onClick={isHearted ? onRemoveHeart : onAddHeart}>
-          <i className={`fa fa-heart${isHearted ? '' : '-o'}`} />
+        <div
+          className="card__like"
+          onClick={
+            this.isHearted() ? () => onRemoveHeart(id) : () => onAddHeart(id)
+          }
+        >
+          <i className={`fa fa-heart${this.isHearted() ? "" : "-o"}`} />
         </div>
 
         <div className="card__subtitle">
           <span>{release_date}</span>
-          <span>{vote_average} ({vote_count} votes)</span>
+          <span>
+            {vote_average} ({vote_count} votes)
+          </span>
         </div>
 
         <div className="card-info">
@@ -59,13 +76,29 @@ export default class Card extends React.Component {
             Summary
           </div>
 
-          {opened
-            ? <div className="card-info__description">{overview}</div>
-            : null
-          }
-
+          {opened ? (
+            <div className="card-info__description">{overview}</div>
+          ) : null}
         </div>
       </div>
     );
   }
 }
+
+const MapDispatchToProps = dispatch => {
+  return {
+    onRemoveHeart: id => dispatch(removeHeart(id)),
+    onAddHeart: id => dispatch(addHeart(id))
+  };
+};
+
+const MapStateToProps = state => {
+  return {
+    hearted: state.hearted
+  };
+};
+
+export default connect(
+  MapStateToProps,
+  MapDispatchToProps
+)(Card);
