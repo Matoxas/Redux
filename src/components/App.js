@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Card from './Card';
-import Genres from './Genres';
-import { setMovieList } from '../actions';
-import { getPopularMovies } from '../thunks';
+import React from "react";
+import { connect } from "react-redux";
+import Card from "./Card";
+import Genres from "./Genres";
+import { setMovieList } from "../actions";
+import { getPopularMovies } from "../thunks";
 
 class App extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      hearted: [],
+      hearted: []
     };
   }
 
@@ -20,26 +20,20 @@ class App extends React.Component {
     onGetPopularMovies();
   }
 
-  setMovieList = (movieList) => {
-    this.setState({
-      movieList,
-    })
-  };
-
-  addHeart = (id) => {
+  addHeart = id => {
     const { hearted } = this.state;
 
     this.setState({
-      hearted: [ ...hearted, id ],
-    })
+      hearted: [...hearted, id]
+    });
   };
 
-  removeHeart = (id) => {
+  removeHeart = id => {
     const { hearted } = this.state;
 
     this.setState({
-      hearted: hearted.filter((currentId) => currentId !== id),
-    })
+      hearted: hearted.filter(currentId => currentId !== id)
+    });
   };
 
   render() {
@@ -48,10 +42,10 @@ class App extends React.Component {
 
     return (
       <React.Fragment>
-        <Genres onChangeList={this.setMovieList} />
+        <Genres />
 
         <div className="cards">
-          {movies.map((movie) => (
+          {movies.map(movie => (
             <Card
               key={movie.id}
               isHearted={hearted.includes(movie.id)}
@@ -66,16 +60,20 @@ class App extends React.Component {
   }
 }
 
+const MapDispatchToProps = dispatch => {
+  return {
+    onGetPopularMovies: () => dispatch(getPopularMovies())
+    // onSetMovieList: list => dispatch(setMovieList(list))
+  };
+};
+
+const MapStateToProps = state => {
+  return {
+    movies: state.movies
+  };
+};
+
 export default connect(
-  (state) => {
-    return {
-      movies: state.movies.list,
-    };
-  },
-  (dispatch) => {
-    return {
-      onGetPopularMovies: () => dispatch(getPopularMovies()),
-      onSetMovieList: (list) => dispatch(setMovieList(list)),
-    };
-  }
+  MapStateToProps,
+  MapDispatchToProps
 )(App);

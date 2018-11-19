@@ -1,21 +1,13 @@
-import React from 'react';
-import { render } from 'react-dom';
-import { applyMiddleware, createStore } from 'redux';
-import { Provider } from 'react-redux';
-import logger from 'redux-logger';
-import Thunk from 'redux-thunk';
-import rootReducer from './reducers';
-import './assets/style.scss';
-import App from './components/App';
-
-const store = createStore(
-  rootReducer,
-  applyMiddleware(logger, Thunk),
-);
+import React from "react";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
+import "./assets/style.scss";
+import App from "./components/App";
+import store from "./store";
 
 render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.querySelector('#app'),
+  document.querySelector("#app")
 );
