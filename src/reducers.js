@@ -1,8 +1,14 @@
+// import { combineReducers } from "redux";
+
 const initialState = {
   movies: [],
   genres: [],
   hearted: []
 };
+
+// const logs = {
+//   logs: []
+// };
 
 const mainReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -12,7 +18,7 @@ const mainReducer = (state = initialState, action) => {
       return { ...state, genres: action.genres };
     case "ADD_HEART":
       return { ...state, hearted: [...state.hearted, action.id] };
-    case "REMOVE_HEART":
+    case "REMOVE HEART":
       return {
         ...state,
         hearted: state.hearted.filter(currentId => currentId !== action.id)
@@ -24,3 +30,12 @@ const mainReducer = (state = initialState, action) => {
 };
 
 export default mainReducer;
+
+// const logsReducer = (state = logs, action) => {
+//   switch (action.type) {
+//     case "ADD_NEW_LOG":
+//       return { ...state, logs: action.log };
+//     default:
+//       return state;
+//   }
+// };
